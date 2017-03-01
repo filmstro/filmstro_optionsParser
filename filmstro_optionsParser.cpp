@@ -110,8 +110,7 @@ bool OptionsParser::parseArguments (const juce::StringArray& arguments, const bo
                             option->setValue (arg);
                         }
                         else {
-                            File myFile = File::getSpecialLocation (File::invokedExecutableFile).getParentDirectory();
-                            option->setValue (myFile.getChildFile (arg).getFullPathName());
+                            option->setValue (File::getCurrentWorkingDirectory().getChildFile (arg).getFullPathName());
                         }
                     }
                     else {
