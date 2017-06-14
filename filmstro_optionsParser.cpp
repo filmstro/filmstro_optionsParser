@@ -105,13 +105,7 @@ bool OptionsParser::parseArguments (const juce::StringArray& arguments, const bo
                 }
                 else if (option->type == OptionsParser::OptFile) {
                     if (pos + 1 < arguments.size()) {
-                        juce::String arg = arguments [++pos];
-                        if (File::isAbsolutePath (arg)) {
-                            option->setValue (arg);
-                        }
-                        else {
-                            option->setValue (File::getCurrentWorkingDirectory().getChildFile (arg).getFullPathName());
-                        }
+                        option->setValue (arguments [++pos]);
                     }
                     else {
                         appendErrorMessage ("Missing path for argument " + arguments [pos]);
@@ -270,6 +264,11 @@ bool OptionsParser::Option::isOptionSet () const
 
 void OptionsParser::Option::setValue (juce::var v)
 {
-    value = v;
+    if (type == OptFile && !File::isAbsolutePath (v.toString())) {
+        value = File::getCurrentWorkingDirectory().getChildFile (v.toString()).getFullPathName();
+    }
+    else {
+        value = v;
+    }
     isSet = true;
 }
